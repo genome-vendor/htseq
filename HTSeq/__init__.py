@@ -581,6 +581,13 @@ def pair_SAM_alignments( alignments, bundle=False ):
    def process_list( almnt_list ):
       while len( almnt_list ) > 0:
          a1 = almnt_list.pop( 0 )
+         
+         hit_index = None
+         try:
+            hit_index =  a1.optional_field("HI")
+         except:
+            pass
+
          # Find its mate
          for a2 in almnt_list:
             if a1.pe_which == a2.pe_which:
@@ -591,6 +598,10 @@ def pair_SAM_alignments( alignments, bundle=False ):
                break
             if a1.iv.chrom == a2.mate_start.chrom and a1.iv.start == a2.mate_start.pos and \
                   a2.iv.chrom == a1.mate_start.chrom and a2.iv.start == a1.mate_start.pos:
+               break
+            if hit_index != None and hit_index == a2.optional_field("HI"):
+               # fixmate may does not fill the mate columns correctly on multi-hit BAMs (i.e. tophat) 
+               # an alternative to matching reads is by those columns is to match on "hit index"
                break
          else:
             if a1.mate_aligned:

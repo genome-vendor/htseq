@@ -85,6 +85,8 @@ def count_reads_in_features( sam_filename, gff_filename, stranded,
       sys.stderr.write( "Error occured when reading first line of sam file.\n" )
       raise
 
+   i = 0
+   last_pair = None
    try:
       if pe_mode:
          read_seq_pe_file = read_seq
@@ -94,9 +96,9 @@ def count_reads_in_features( sam_filename, gff_filename, stranded,
       notaligned = 0
       lowqual = 0
       nonunique = 0
-      i = 0   
       for r in read_seq:
          i += 1
+         last_pair = r
          if not pe_mode:
             if not r.aligned:
                notaligned += 1
@@ -194,7 +196,11 @@ def count_reads_in_features( sam_filename, gff_filename, stranded,
          if i % 100000 == 0 and not quiet:
             sys.stderr.write( "%d sam %s processed.\n" % ( i, "lines " if not pe_mode else "line pairs" ) )
 
-   except:
+   except Exception, e:
+      sys.stderr.write("Exception: %s\n" % str(e))
+      sys.stderr.write("Last pair: %d\n" % i);
+      if last_pair != None:
+          sys.stderr.write("Last read: %s\n" % last_pair[0].read.name); 
       if not pe_mode:
          sys.stderr.write( "Error occured in %s.\n" % read_seq.get_line_number_string() )
       else:
