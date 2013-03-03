@@ -1,0 +1,5 @@
+#!/bin/bash
+DIR=$(dirname $BASH_SOURCE)
+export PYTHONPATH=$DIR/build/lib.linux-x86_64-2.6:$PYTHONPATH 
+/usr/bin/python2.6 $DIR/scripts/htseq-count $*
+
