@@ -605,7 +605,7 @@ def pair_SAM_alignments( alignments, bundle=False ):
                break
          else:
             if a1.mate_aligned:
-               warnings.warn( "Read " + a1.read.name + " claims to have an aligned mate " +
+               warnings.warn( "Read " + a1.read.name + " CLAIMNS to have an aligned mate " +
                   "which could not be found. (Is the SAM file properly sorted?)" )
             a2 = None
          if a2 is not None:
